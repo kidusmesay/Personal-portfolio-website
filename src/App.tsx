@@ -326,13 +326,10 @@ export default function App() {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    className="neu-btn flex items-center justify-between p-3 rounded-2xl text-xs text-slate-700 dark:text-slate-300 font-medium transition duration-200"
+                    className="neu-btn flex items-center gap-2.5 p-3 rounded-2xl text-xs text-slate-700 dark:text-slate-300 font-medium transition duration-200"
                   >
-                    <div className="flex items-center gap-2.5">
-                      <Github className="w-4 h-4 text-slate-600 dark:text-slate-400" />
-                      <span>GitHub Profile</span>
-                    </div>
-                    <span className="text-[10px] font-mono text-slate-400">github.com</span>
+                    <Github className="w-4 h-4 text-slate-600 dark:text-slate-400" />
+                    <span>GitHub Profile</span>
                   </motion.a>
                   
                   <motion.a
@@ -342,13 +339,10 @@ export default function App() {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    className="neu-btn flex items-center justify-between p-3 rounded-2xl text-xs text-slate-700 dark:text-slate-300 font-medium transition duration-200"
+                    className="neu-btn flex items-center gap-2.5 p-3 rounded-2xl text-xs text-slate-700 dark:text-slate-300 font-medium transition duration-200"
                   >
-                    <div className="flex items-center gap-2.5">
-                      <Linkedin className="w-4 h-4 text-blue-500" />
-                      <span>LinkedIn Sync</span>
-                    </div>
-                    <span className="text-[10px] font-mono text-slate-400">linkedin.com</span>
+                    <Linkedin className="w-4 h-4 text-blue-500" />
+                    <span>LinkedIn Sync</span>
                   </motion.a>
 
                   <motion.button
@@ -356,13 +350,10 @@ export default function App() {
                     onClick={() => setIsContactModalOpen(true)}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    className="neu-btn flex items-center justify-between p-3 rounded-2xl text-xs text-blue-600 dark:text-blue-400 font-medium transition duration-200 cursor-pointer w-full text-left"
+                    className="neu-btn flex items-center gap-2.5 p-3 rounded-2xl text-xs text-blue-600 dark:text-blue-400 font-medium transition duration-200 cursor-pointer w-full text-left"
                   >
-                    <div className="flex items-center gap-2.5">
-                      <Mail className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                      <span>Contact Directly</span>
-                    </div>
-                    <span className="text-[10px] font-mono">Open Pop-up</span>
+                    <Mail className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    <span>Contact Directly</span>
                   </motion.button>
                 </div>
 

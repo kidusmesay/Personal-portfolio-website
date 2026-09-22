@@ -10,7 +10,6 @@ import {
   Layers, 
   Zap, 
   Compass, 
-  Activity, 
   FileCode, 
   Terminal, 
   LineChart, 
@@ -332,14 +331,6 @@ export default function ProjectsPage({ onBack, isDark, onOpenContact }: Projects
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                   Explore full system blueprints, technical challenges, and structural solutions.
                 </p>
-              </div>
-
-              {/* Quick statistics tag */}
-              <div className="flex items-center gap-2 neu-pressed-sm px-4 py-2.5 rounded-2xl self-start sm:self-center">
-                <Activity className="w-4 h-4 text-emerald-500" />
-                <span className="text-[11px] font-mono font-medium text-slate-700 dark:text-slate-300">
-                  Active Daemons: 3 Online
-                </span>
               </div>
             </div>
 

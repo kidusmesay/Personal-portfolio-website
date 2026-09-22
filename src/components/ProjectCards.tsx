@@ -6,7 +6,7 @@ interface ProjectCardsProps {
   onViewProjects?: () => void;
 }
 
-export default function ProjectCards({ onViewProjects }: ProjectCardsProps) {
+export default function ProjectCards({ onViewProjects: _onViewProjects }: ProjectCardsProps) {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -239,17 +239,6 @@ export default function ProjectCards({ onViewProjects }: ProjectCardsProps) {
           </motion.div>
         )}
       </motion.div>
-
-      {onViewProjects && (
-        <div className="mt-6 flex justify-end">
-          <button
-            onClick={onViewProjects}
-            className="neu-btn inline-flex items-center gap-2 px-5 py-3 text-blue-600 dark:text-blue-400 font-bold text-xs font-mono tracking-wider rounded-2xl cursor-pointer"
-          >
-            Explore Case Studies & Architecture Breakdown &rarr;
-          </button>
-        </div>
-      )}
     </section>
   );
 }
