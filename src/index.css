@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --background: #eef2f6;
+  --surface: #eef2f6;
+  --surface-subtle: #e6ebf1;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  
+  /* Neumorphic Shadows - Light */
+  --neu-shadow-raised: 7px 7px 16px #cbcfd5, -7px -7px 16px #ffffff;
+  --neu-shadow-raised-sm: 4px 4px 10px #d0d4da, -4px -4px 10px #ffffff;
+  --neu-shadow-raised-lg: 10px 10px 24px #c6cad1, -10px -10px 24px #ffffff;
+  --neu-shadow-inset: inset 3px 3px 6px #d1d5db, inset -3px -3px 6px #ffffff;
+  --neu-shadow-inset-sm: inset 2px 2px 4px #d8dcde, inset -2px -2px 4px #ffffff;
+  --neu-border: rgba(255, 255, 255, 0.75);
+}
+
+.dark {
+  --background: #12151c;
+  --surface: #151820;
+  --surface-subtle: #101218;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+
+  /* Neumorphic Shadows - Dark */
+  --neu-shadow-raised: 6px 6px 14px #0a0c10, -6px -6px 14px #1e222d;
+  --neu-shadow-raised-sm: 3px 3px 8px #0a0c10, -3px -3px 8px #1c202a;
+  --neu-shadow-raised-lg: 10px 10px 22px #08090d, -10px -10px 22px #202532;
+  --neu-shadow-inset: inset 3px 3px 6px #0b0d11, inset -3px -3px 6px #1d212b;
+  --neu-shadow-inset-sm: inset 2px 2px 4px #0b0d11, inset -2px -2px 4px #1b1f28;
+  --neu-border: rgba(255, 255, 255, 0.04);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+::selection {
+  background-color: var(--accent);
+  color: #ffffff;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #28303f;
+}
+
+/* Neumorphic Component Classes */
+.neu-flat {
+  background: var(--surface);
+  box-shadow: var(--neu-shadow-raised);
+  border: 1px solid var(--neu-border);
+}
+
+.neu-flat-sm {
+  background: var(--surface);
+  box-shadow: var(--neu-shadow-raised-sm);
+  border: 1px solid var(--neu-border);
+}
+
+.neu-flat-lg {
+  background: var(--surface);
+  box-shadow: var(--neu-shadow-raised-lg);
+  border: 1px solid var(--neu-border);
+}
+
+.neu-pressed {
+  background: var(--surface-subtle);
+  box-shadow: var(--neu-shadow-inset);
+  border: 1px solid transparent;
+}
+
+.neu-pressed-sm {
+  background: var(--surface-subtle);
+  box-shadow: var(--neu-shadow-inset-sm);
+  border: 1px solid transparent;
+}
+
+.neu-btn {
+  background: var(--surface);
+  box-shadow: var(--neu-shadow-raised-sm);
+  border: 1px solid var(--neu-border);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neu-btn:hover {
+  box-shadow: var(--neu-shadow-raised);
+  transform: translateY(-1px);
+}
+
+.neu-btn:active {
+  box-shadow: var(--neu-shadow-inset-sm);
+  transform: translateY(0);
+}
+
+/* Focus States */
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+
