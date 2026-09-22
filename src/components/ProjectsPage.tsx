@@ -17,7 +17,8 @@ import {
   Sparkles, 
   Bookmark, 
   CheckCircle2, 
-  BadgeAlert 
+  BadgeAlert,
+  Mail 
 } from "lucide-react";
 import { projectEntries, currentlyBuildingProject } from "../data";
 
@@ -281,9 +282,10 @@ export function streamContainerStats(onStats: (cpu: number, ram: number) => void
 interface ProjectsPageProps {
   onBack: () => void;
   isDark: boolean;
+  onOpenContact?: () => void;
 }
 
-export default function ProjectsPage({ onBack, isDark }: ProjectsPageProps) {
+export default function ProjectsPage({ onBack, isDark, onOpenContact }: ProjectsPageProps) {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
   const containerVariants = {
@@ -648,7 +650,7 @@ export default function ProjectsPage({ onBack, isDark }: ProjectsPageProps) {
             </div>
 
             {/* Back action foot bar */}
-            <div className="pt-4 flex justify-center">
+            <div className="pt-4 flex flex-wrap justify-center items-center gap-3">
               <button
                 onClick={() => setSelectedProjectId(null)}
                 className="px-6 py-2.5 neu-btn text-slate-700 dark:text-slate-300 rounded-xl text-xs font-mono font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer"
@@ -656,6 +658,15 @@ export default function ProjectsPage({ onBack, isDark }: ProjectsPageProps) {
                 <ArrowLeft className="w-4 h-4" />
                 Return to Projects Directory
               </button>
+              {onOpenContact && (
+                <button
+                  onClick={onOpenContact}
+                  className="px-6 py-2.5 neu-btn text-blue-600 dark:text-blue-400 rounded-xl text-xs font-mono font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <Mail className="w-4 h-4" />
+                  Discuss Architecture / Contact
+                </button>
+              )}
             </div>
 
           </motion.div>

@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { 
   Github, 
   Linkedin, 
@@ -14,13 +14,16 @@ import {
   ChevronRight,
   Terminal,
   MapPin,
-  ExternalLink
+  ExternalLink,
+  Menu,
+  X
 } from "lucide-react";
 
 import TechStack from "./components/TechStack";
 import ExperienceTimeline from "./components/ExperienceTimeline";
 import CollegeProjectCards from "./components/ProjectCards";
 import ProjectsPage from "./components/ProjectsPage";
+import ContactModal from "./components/ContactModal";
 
 export default function App() {
   // Simple, clean light/dark theme synced with localStorage
@@ -38,6 +41,38 @@ export default function App() {
   // Track active section for Scroll Spy
   const [activeTab, setActiveTab] = useState<string>("about");
   const [viewMode, setViewMode] = useState<"home" | "projects">("home");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(false);
+
+  const navItems = [
+    { id: "about", label: "About" },
+    { id: "skills", label: "Skills" },
+    { id: "experience", label: "Experience" },
+    { id: "projects", label: "Projects" },
+    { id: "contact", label: "Contact" }
+  ];
+
+  // Close mobile menu on resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Close mobile menu on scroll
+  useEffect(() => {
+    const handleScrollClose = () => {
+      if (mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener("scroll", handleScrollClose, { passive: true });
+    return () => window.removeEventListener("scroll", handleScrollClose);
+  }, [mobileMenuOpen]);
 
   // Sync theme to HTML document classes
   useEffect(() => {
@@ -98,12 +133,18 @@ export default function App() {
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    setMobileMenuOpen(false);
     setViewMode("home");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleNavClick = (tabId: string, e: React.MouseEvent) => {
     e.preventDefault();
+    setMobileMenuOpen(false);
+    if (tabId === "contact") {
+      setIsContactModalOpen(true);
+      return;
+    }
     if (tabId === "projects") {
       setViewMode("projects");
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -127,7 +168,7 @@ export default function App() {
         id="navbar-root"
         className="fixed top-0 left-0 right-0 z-50 pt-3 px-4 transition-all duration-300"
       >
-        <div className="max-w-[1100px] mx-auto px-6 h-14 neu-flat-sm rounded-2xl flex items-center justify-between backdrop-blur-md">
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 h-14 neu-flat-sm rounded-2xl flex items-center justify-between backdrop-blur-md">
           {/* Logo / Title */}
           <motion.a 
             href="#about" 
@@ -139,18 +180,12 @@ export default function App() {
             <div className="w-8 h-8 rounded-xl neu-btn flex items-center justify-center text-blue-600 dark:text-blue-400 text-xs font-bold font-mono">
               KM
             </div>
-            <span className="font-semibold text-xs tracking-tight">kidus_mesayt.json</span>
+            <span className="font-semibold text-xs tracking-tight truncate max-w-[130px] sm:max-w-none">kidus_mesayt.json</span>
           </motion.a>
  
-          {/* Anchor Links */}
+          {/* Desktop Anchor Links */}
           <div className="hidden md:flex items-center gap-2 text-xs font-semibold tracking-wide">
-            {[
-              { id: "about", label: "About" },
-              { id: "skills", label: "Skills" },
-              { id: "experience", label: "Experience" },
-              { id: "projects", label: "Projects" },
-              { id: "contact", label: "Contact" }
-            ].map((tab) => {
+            {navItems.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
                 <a
@@ -169,7 +204,7 @@ export default function App() {
             })}
           </div>
 
-          {/* Right menu side - Clean Theme Toggler */}
+          {/* Right menu side - Clean Theme Toggler & Mobile Hamburger */}
           <div className="flex items-center gap-2">
             <motion.button
               id="theme-toggler"
@@ -180,8 +215,59 @@ export default function App() {
             >
               {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-blue-600" />}
             </motion.button>
+
+            {/* Mobile Menu Toggle Button */}
+            <motion.button
+              id="mobile-menu-toggle"
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              whileTap={{ scale: 0.95 }}
+              className="md:hidden p-2 rounded-xl neu-btn text-slate-700 dark:text-slate-200 transition-all cursor-pointer"
+              aria-label="Toggle navigation menu"
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? (
+                <X className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              ) : (
+                <Menu className="w-4 h-4 text-slate-700 dark:text-slate-200" />
+              )}
+            </motion.button>
           </div>
         </div>
+
+        {/* Mobile Dropdown Navigation */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              id="mobile-nav-dropdown"
+              initial={{ opacity: 0, y: -8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.98 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              className="md:hidden max-w-[1100px] mx-auto mt-2 p-2.5 neu-flat rounded-2xl flex flex-col gap-1.5 backdrop-blur-md"
+            >
+              {navItems.map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <a
+                    key={tab.id}
+                    href={`#${tab.id}`}
+                    onClick={(e) => handleNavClick(tab.id, e)}
+                    className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
+                      isActive
+                        ? "neu-pressed-sm text-blue-600 dark:text-blue-400 font-bold"
+                        : "neu-btn text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400"
+                    }`}
+                  >
+                    <span>{tab.label}</span>
+                    {isActive && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400" />
+                    )}
+                  </a>
+                );
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Main Content Area */}
@@ -228,7 +314,7 @@ export default function App() {
 
                 {/* Bio description */}
                 <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-400 mb-6 font-normal">
-                  I'm a Software Engineer with a passion for crafting robust, user-focused applications across the stack. I thrive on solving complex problems, optimizing system performance, and writing maintainable code. To stay ahead, I actively integrate AI-assisted development tools into my workflow—not to replace good engineering, but to enhance it. Whether I'm designing APIs, debugging legacy systems, or exploring new technologies, I'm driven by one goal: building software that makes a real difference.
+                  I'm a Software Engineer with a passion for crafting robust, user-focused applications across the stack. I thrive on solving complex problems, optimizing system performance, and writing maintainable code. To stay ahead, I actively integrate AI-assisted development tools into my workflow—not to replace good engineering, but to enhance it. Whether I'm designing APIs, debugging legacy systems, or exploring new technologies, I'm driven by one goal: <strong className="font-bold text-blue-600 dark:text-blue-400">building software that makes a real difference</strong>.
                 </p>
 
                 {/* BADGES & SOCIAL LINKS */}
@@ -265,19 +351,19 @@ export default function App() {
                     <span className="text-[10px] font-mono text-slate-400">linkedin.com</span>
                   </motion.a>
 
-                  <motion.a
+                  <motion.button
                     id="hero-email-link"
-                    href="mailto:kidusmesayt@gmail.com"
+                    onClick={() => setIsContactModalOpen(true)}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    className="neu-btn flex items-center justify-between p-3 rounded-2xl text-xs text-blue-600 dark:text-blue-400 font-medium transition duration-200"
+                    className="neu-btn flex items-center justify-between p-3 rounded-2xl text-xs text-blue-600 dark:text-blue-400 font-medium transition duration-200 cursor-pointer w-full text-left"
                   >
                     <div className="flex items-center gap-2.5">
                       <Mail className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                      <span>Email Directly</span>
+                      <span>Contact Directly</span>
                     </div>
-                    <span className="text-[10px] font-mono">kidusmesayt@gmail.com</span>
-                  </motion.a>
+                    <span className="text-[10px] font-mono">Open Pop-up</span>
+                  </motion.button>
                 </div>
 
                 {/* Quick stats board integrated in sidebar bio */}
@@ -324,7 +410,7 @@ export default function App() {
               {/* Unified Project and Build Cards Grid Section */}
               <CollegeProjectCards onViewProjects={() => { setViewMode("projects"); window.scrollTo({ top: 0, behavior: "smooth" }); }} />
 
-              {/* Contact Section updated to modern card styling */}
+              {/* Contact Prompt Section (Triggers Popup) */}
               <motion.section 
                 id="contact" 
                 initial={{ opacity: 0, y: 15 }}
@@ -333,52 +419,41 @@ export default function App() {
                 transition={{ duration: 0.4, ease: "easeOut" }}
                 className="neu-flat rounded-3xl p-6 sm:p-7 transition-all duration-300"
               >
-                <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  // Get In Touch
-                </h2>
-                <h3 className="text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-2">
-                  Let's Discuss System Layouts
-                </h3>
-                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-                  I am interested in software engineering roles, fullstack web applications, and system development. Drop me an email or trace my activities on LinkedIn and GitHub.
-                </p>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+                  <div>
+                    <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                      // Direct Connect
+                    </h2>
+                    <h3 className="text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-1">
+                      Let's Build Something Together
+                    </h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg">
+                      Interested in software engineering roles, fullstack systems, or technical architecture. Click to launch the contact modal.
+                    </p>
+                  </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <motion.a
-                    href="mailto:kidusmesayt@gmail.com"
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    className="neu-btn flex items-center justify-between p-4 rounded-2xl text-slate-800 dark:text-slate-100 transition cursor-pointer"
+                  <motion.button
+                    id="open-contact-popup-btn"
+                    onClick={() => setIsContactModalOpen(true)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-5 py-3 rounded-2xl neu-btn text-xs font-mono font-bold text-blue-600 dark:text-blue-400 flex items-center justify-center gap-2 cursor-pointer self-start sm:self-center shrink-0 transition-all"
                   >
-                    <div>
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100 mb-0.5">Email Route</h4>
-                      <p className="text-[11px] font-mono text-slate-500 dark:text-slate-400">kidusmesayt@gmail.com</p>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-slate-400" />
-                  </motion.a>
-
-                  <motion.a
-                    href="https://linkedin.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    className="neu-btn flex items-center justify-between p-4 rounded-2xl text-slate-800 dark:text-slate-100 transition cursor-pointer"
-                  >
-                    <div>
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100 mb-0.5">LinkedIn Sync</h4>
-                      <p className="text-[11px] font-mono text-slate-500 dark:text-slate-400">linkedin.com/in/kidusmesay</p>
-                    </div>
-                    <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
-                  </motion.a>
+                    <Mail className="w-4 h-4" />
+                    <span>Open Contact Pop-up</span>
+                  </motion.button>
                 </div>
               </motion.section>
             </div>
           </>
         ) : (
           <div className="w-full">
-            <ProjectsPage onBack={() => { setViewMode("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }} isDark={isDark} />
+            <ProjectsPage 
+              onBack={() => { setViewMode("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }} 
+              isDark={isDark} 
+              onOpenContact={() => setIsContactModalOpen(true)}
+            />
           </div>
         )}
       </main>
@@ -391,6 +466,12 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Contact Pop-up Modal */}
+      <ContactModal 
+        isOpen={isContactModalOpen} 
+        onClose={() => setIsContactModalOpen(false)} 
+      />
     </div>
   );
 }
